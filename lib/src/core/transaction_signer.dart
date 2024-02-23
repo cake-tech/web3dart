@@ -100,13 +100,13 @@ Uint8List prependTransactionType(int type, Uint8List transaction) {
     ..setAll(1, transaction);
 }
 
-Uint8List signTransactionRaw(
+Future<Uint8List> signTransactionRaw(
   Transaction transaction,
   Credentials c, {
   int? chainId = 1,
-}) {
+}) async {
   final encoded = transaction.getUnsignedSerialized(chainId: chainId);
-  final signature = c.signToEcSignature(encoded, chainId: chainId, isEIP1559: transaction.isEIP1559);
+  final signature = await c.signToSignature(encoded, chainId: chainId, isEIP1559: transaction.isEIP1559);
 
   if (transaction.isEIP1559 && chainId != null) {
     return uint8ListFromList(

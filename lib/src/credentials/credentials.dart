@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:web3dart/src/utils/equality.dart' as eq;
 import 'package:pointycastle/ecc/api.dart' show ECPoint;
+import 'package:web3dart/src/utils/equality.dart' as eq;
 
 import '../../web3dart.dart' show Transaction;
 import '../crypto/formatting.dart';
@@ -72,7 +72,6 @@ abstract class Credentials {
 
   /// Signs the [payload] with a private key and returns the obtained
   /// signature.
-  @Deprecated('Please use [signToEcSignature]')
   Future<MsgSignature> signToSignature(
     Uint8List payload, {
     int? chainId,
@@ -90,7 +89,6 @@ abstract class Credentials {
   /// Signs an Ethereum specific signature. This method is equivalent to
   /// [sign], but with a special prefix so that this method can't be used to
   /// sign, for instance, transactions.
-  @Deprecated('Please use [signPersonalMessageToUint8List]')
   Future<Uint8List> signPersonalMessage(Uint8List payload, {int? chainId}) {
     final prefix = _messagePrefix + payload.length.toString();
     final prefixBytes = ascii.encode(prefix);
@@ -123,9 +121,7 @@ abstract class CredentialsWithKnownAddress extends Credentials {
 
   @Deprecated('Please use [address]')
   @override
-  Future<EthereumAddress> extractAddress() async {
-    return Future.value(address);
-  }
+  Future<EthereumAddress> extractAddress() async => Future.value(address);
 }
 
 /// Interface for [Credentials] that don't sign transactions locally, for
@@ -180,7 +176,6 @@ class EthPrivateKey extends CredentialsWithKnownAddress {
   /// The public key corresponding to this private key.
   ECPoint get publicKey => (params.G * privateKeyInt)!;
 
-  @Deprecated('Please use [signToSignatureSync]')
   @override
   Future<MsgSignature> signToSignature(
     Uint8List payload, {

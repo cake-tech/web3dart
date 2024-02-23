@@ -152,7 +152,7 @@ void main() {
   test('sign eip 1559 transaction without client', () {
     final data = jsonDecode(rawJson) as List<dynamic>;
 
-    Future.forEach(data, (element) {
+    Future.forEach(data, (element) async {
       final tx = element as Map<String, dynamic>;
       final credentials =
           EthPrivateKey.fromHex(strip0x(tx['privateKey'] as String));
@@ -174,7 +174,7 @@ void main() {
       );
 
       final signature =
-          signTransactionRaw(transaction, credentials, chainId: 4);
+          await signTransactionRaw(transaction, credentials, chainId: 4);
 
       expect(
         bytesToHex(
