@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import '../../crypto.dart';
 import '../../web3dart.dart';
 
@@ -49,6 +51,30 @@ abstract class GeneratedContract {
         );
 
     return client.sendTransaction(
+      credentials,
+      transaction,
+      chainId: chainId,
+      fetchChainIdFromNetworkId: chainId == null,
+    );
+  }
+
+  Future<Uint8List> writeRaw(
+      Credentials credentials,
+      Transaction? base,
+      ContractFunction function,
+      List<dynamic> parameters,
+      ) {
+    final transaction = base?.copyWith(
+      data: function.encodeCall(parameters),
+      to: self.address,
+    ) ??
+        Transaction.callContract(
+          contract: self,
+          function: function,
+          parameters: parameters,
+        );
+
+    return client.signTransaction(
       credentials,
       transaction,
       chainId: chainId,
